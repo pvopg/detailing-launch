@@ -18,9 +18,10 @@ import { ToolShell } from './tool-shell';
 
 export function ServiceBuilder({ moduleKey, initialState }: { moduleKey: string; initialState: Json | null }) {
   const portalModule = getPortalModule(moduleKey);
-  const { state, setState, status } = useModuleState<ServiceBuilderState>(
+  const { state, setState, status, reset } = useModuleState<ServiceBuilderState>(
     moduleKey,
-    normalizeServiceBuilderState(initialState)
+    normalizeServiceBuilderState(initialState),
+    () => normalizeServiceBuilderState(null)
   );
 
   function addPackage() {
@@ -42,6 +43,7 @@ export function ServiceBuilder({ moduleKey, initialState }: { moduleKey: string;
       title={portalModule?.title ?? 'Service & package builder'}
       description={portalModule?.description ?? ''}
       status={status}
+      onReset={reset}
     >
       {state.packages.length === 0 ? (
         <EmptyState onCreate={addPackage} />

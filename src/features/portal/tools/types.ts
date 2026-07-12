@@ -52,3 +52,56 @@ export interface PricingScenario {
 export interface PricingCalculatorState {
   scenarios: PricingScenario[];
 }
+
+/** One thing the detailer does at a stage of the customer journey — a call, text, email, or task. */
+export interface WorkflowTouchpoint {
+  id: string;
+  /** How it happens, e.g. "Text", "Email", "Phone call", "In person". */
+  channel: string;
+  /** What the detailer does or says at this touch point. */
+  action: string;
+  /** When it happens relative to the stage, e.g. "Within 1 hour", "Day before", "48h after". */
+  timing: string;
+}
+
+/** A stage in the lead-to-review journey, with the touch points that move a customer through it. */
+export interface WorkflowStage {
+  id: string;
+  name: string;
+  /** What "done" looks like for this stage. */
+  goal: string;
+  touchpoints: WorkflowTouchpoint[];
+}
+
+export interface WorkflowPlannerState {
+  stages: WorkflowStage[];
+}
+
+/** Which part of the customer journey a saved message is for. Drives grouping and filtering. */
+export type MessageCategory = 'inquiry' | 'quote' | 'reminder' | 'review' | 'follow-up' | 'other';
+
+/** A reusable message written in the detailer's own voice, with optional {placeholders}. */
+export interface SavedMessage {
+  id: string;
+  /** Short name for finding it later, e.g. "First reply to a DM". */
+  label: string;
+  category: MessageCategory;
+  body: string;
+}
+
+export interface MessageLibraryState {
+  messages: SavedMessage[];
+}
+
+/** The detailer's saved decision for one software use case (see `./software-catalog.ts`). */
+export interface SoftwareChoice {
+  /** Id of the chosen catalog option, or '' when nothing is picked yet or a custom tool is used. */
+  optionId: string;
+  /** Free-form: a custom tool the detailer already uses, or notes on why they chose this. */
+  notes: string;
+}
+
+export interface SoftwareFinderState {
+  /** Map from catalog use-case id → the saved choice for it. */
+  choices: Record<string, SoftwareChoice>;
+}

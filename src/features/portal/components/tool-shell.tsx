@@ -1,21 +1,29 @@
 'use client';
 
-import { type ReactNode } from 'react';
+import { type ReactNode, useState } from 'react';
 import Link from 'next/link';
-import { IoArrowBack, IoCheckmarkCircle, IoCloudOfflineOutline, IoSyncOutline } from 'react-icons/io5';
+import { IoArrowBack, IoCheckmarkCircle, IoCloudOfflineOutline, IoRefreshOutline, IoSyncOutline } from 'react-icons/io5';
+
+import { Button } from '@/components/ui/button';
+import { ConfirmDialog } from '@/components/ui/confirm-dialog';
 
 import type { SaveStatus } from '../hooks/use-module-state';
 
-/** Chrome shared by every Business Systems tool: back link, title, and a live save indicator. */
+/**
+ * Chrome shared by every Business Systems tool: back link, title, and a live save indicator.
+ * Pass `onReset` to surface a guarded "Reset to defaults" action for the tool.
+ */
 export function ToolShell({
   title,
   description,
   status,
+  onReset,
   children,
 }: {
   title: string;
   description: string;
   status: SaveStatus;
+  onReset?: () => void;
   children: ReactNode;
 }) {
   return (
@@ -33,12 +41,41 @@ export function ToolShell({
             <h1>{title}</h1>
             <p className='max-w-2xl text-lg text-muted-foreground'>{description}</p>
           </div>
-          <SaveIndicator status={status} />
+          <div className='flex items-center gap-4'>
+            <SaveIndicator status={status} />
+            {onReset && <ResetControl title={title} onReset={onReset} />}
+          </div>
         </div>
       </header>
 
       {children}
     </section>
+  );
+}
+
+function ResetControl({ title, onReset }: { title: string; onReset: () => void }) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <Button variant='outline' size='sm' onClick={() => setOpen(true)}>
+        <IoRefreshOutline aria-hidden /> Reset to defaults
+      </Button>
+      <ConfirmDialog
+        open={open}
+        onOpenChange={setOpen}
+        title='Reset to defaults?'
+        description={
+          <>
+            This clears everything you&rsquo;ve saved in <span className='font-medium text-foreground'>{title}</span> and
+            restores it to how it started. This can&rsquo;t be undone.
+          </>
+        }
+        confirmLabel='Reset to defaults'
+        onConfirm={onReset}
+        destructive
+      />
+    </>
   );
 }
 

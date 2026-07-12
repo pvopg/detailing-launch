@@ -14,8 +14,11 @@ export type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
  * so this hook centralizes the save lifecycle and exposes a `status` for the shell to surface.
  *
  * The initial (loaded) state is never re-saved — only subsequent edits trigger a write.
+ *
+ * Pass `getDefaultState` to enable `reset()`, which returns the tool to its first-time-user state.
+ * A reset flows through `setState`, so the same debounced autosave persists it — no separate path.
  */
-export function useModuleState<T>(moduleKey: string, initialState: T) {
+export function useModuleState<T>(moduleKey: string, initialState: T, getDefaultState?: () => T) {
   const [state, setState] = useState<T>(initialState);
   const [status, setStatus] = useState<SaveStatus>('idle');
 
@@ -42,5 +45,9 @@ export function useModuleState<T>(moduleKey: string, initialState: T) {
     };
   }, [state, moduleKey]);
 
-  return { state, setState, status };
+  function reset() {
+    if (getDefaultState) setState(getDefaultState());
+  }
+
+  return { state, setState, status, reset };
 }

@@ -18,9 +18,10 @@ import { ToolShell } from './tool-shell';
 
 export function PricingCalculator({ moduleKey, initialState }: { moduleKey: string; initialState: Json | null }) {
   const portalModule = getPortalModule(moduleKey);
-  const { state, setState, status } = useModuleState<PricingCalculatorState>(
+  const { state, setState, status, reset } = useModuleState<PricingCalculatorState>(
     moduleKey,
-    normalizePricingState(initialState)
+    normalizePricingState(initialState),
+    () => normalizePricingState(null)
   );
 
   const [activeId, setActiveId] = useState<string | null>(state.scenarios[0]?.id ?? null);
@@ -52,6 +53,7 @@ export function PricingCalculator({ moduleKey, initialState }: { moduleKey: stri
       title={portalModule?.title ?? 'Pricing & profitability calculator'}
       description={portalModule?.description ?? ''}
       status={status}
+      onReset={reset}
     >
       {state.scenarios.length === 0 ? (
         <EmptyState onCreate={addScenario} />
