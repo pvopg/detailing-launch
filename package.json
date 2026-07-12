@@ -15,6 +15,9 @@
     "supabase:link": "env-cmd -f ./.env.local supabase link --project-ref qfxtaighcaatmdeimwzs",
     "supabase:init": "env-cmd -f ./.env.local supabase init",
     "supabase:login": "env-cmd -f ./.env.local supabase login",
+    "supabase:start": "env-cmd -f ./.env.local supabase start",
+    "supabase:stop": "supabase stop",
+    "supabase:push-config": "env-cmd -f ./.env.local supabase config push",
     "migration:new": "supabase migration new",
     "migration:up": "supabase migration up --linked --debug && npm run generate-types",
     "migration:squash": "supabase migration squash --linked"
