@@ -1,20 +1,27 @@
 import z from 'zod';
 
-export const priceCardVariantSchema = z.enum(['basic', 'pro', 'enterprise']);
+// The entitlement tier a product grants. Stored on the Stripe product's metadata as `tier`
+// and synced to our `products` table. Must match the `entitlement_tier` DB enum.
+export const entitlementTierSchema = z.enum(['foundation', 'business_systems']);
 
 export const productMetadataSchema = z
   .object({
-    price_card_variant: priceCardVariantSchema,
-    generated_images: z.string().optional(),
-    image_editor: z.enum(['basic', 'pro']),
-    support_level: z.enum(['email', 'live']),
+    tier: entitlementTierSchema,
+    // Optional display order on the pricing page.
+    index: z.string().optional(),
+    // Optional pipe-separated ("|") list of feature bullet points to show on the card.
+    features: z.string().optional(),
   })
   .transform((data) => ({
-    priceCardVariant: data.price_card_variant,
-    generatedImages: data.generated_images ? parseInt(data.generated_images) : 'enterprise',
-    imageEditor: data.image_editor,
-    supportLevel: data.support_level,
+    tier: data.tier,
+    index: data.index ? parseInt(data.index) : 0,
+    features: data.features
+      ? data.features
+          .split('|')
+          .map((feature) => feature.trim())
+          .filter(Boolean)
+      : [],
   }));
 
 export type ProductMetadata = z.infer<typeof productMetadataSchema>;
-export type PriceCardVariant = z.infer<typeof priceCardVariantSchema>;
+export type EntitlementTier = z.infer<typeof entitlementTierSchema>;
