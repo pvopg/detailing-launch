@@ -9,10 +9,10 @@ import { Reveal } from './reveal';
 import { TrackInView } from './track-in-view';
 
 const PREVIEW_BODY: Record<string, { url: string; node: ReactNode }> = {
-  dashboard: { url: 'app.pggallery.com/portal', node: <DashboardPreview /> },
-  guide: { url: 'app.pggallery.com/portal/domain-email', node: <GuidePreview /> },
-  tools: { url: 'app.pggallery.com/portal/pricing-calculator', node: <ToolsPreview /> },
-  search: { url: 'app.pggallery.com/portal?q=deposit', node: <SearchPreview /> },
+  dashboard: { url: 'detailbusiness.com/portal', node: <DashboardPreview /> },
+  guide: { url: 'detailbusiness.com/portal/domain-email', node: <GuidePreview /> },
+  tools: { url: 'detailbusiness.com/portal/pricing-calculator', node: <ToolsPreview /> },
+  search: { url: 'detailbusiness.com/portal?q=deposit', node: <SearchPreview /> },
 };
 
 /**

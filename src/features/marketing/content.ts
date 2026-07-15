@@ -439,7 +439,7 @@ export const landingContent: LandingPageContent = {
       'A written post-call summary',
     ],
     ctaLabel: 'Ask about a consultation',
-    ctaHref: 'mailto:hello@pggallery.com?subject=Detailing%20Business%20Systems%20Consultation',
+    ctaHref: 'mailto:hello@detailbusiness.com?subject=Detailing%20Business%20Systems%20Consultation',
     separateNote: 'The consultation is a separate offer and is not included with either kit.',
     creditEnabled: false,
     creditCopy: undefined,
@@ -515,7 +515,7 @@ export const landingContent: LandingPageContent = {
   },
   footer: {
     tagline: 'Digital business systems for working mobile detailers.',
-    supportEmail: 'hello@pggallery.com',
+    supportEmail: 'hello@detailbusiness.com',
     legal: [
       // Only rendered when `available` is true, so no dead legal links ship. Flip to true when the
       // corresponding page is implemented and (for refund) approved.

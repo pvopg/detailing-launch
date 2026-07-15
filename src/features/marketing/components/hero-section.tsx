@@ -47,7 +47,7 @@ export function HeroSection() {
           </div>
 
           <div className='relative animate-fade-rise' style={{ animationDelay: '200ms' }}>
-            <BrowserFrame url='app.pggallery.com/portal'>
+            <BrowserFrame url='detailbusiness.com/portal'>
               <DashboardPreview />
             </BrowserFrame>
           </div>
