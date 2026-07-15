@@ -24,8 +24,11 @@ export async function POST(req: Request) {
   const webhookSecret = getEnvVar(process.env.STRIPE_WEBHOOK_SECRET, 'STRIPE_WEBHOOK_SECRET');
   let event: Stripe.Event;
 
+  if (!sig || !webhookSecret) {
+    return Response.json('Webhook Error: missing stripe-signature header or webhook secret', { status: 400 });
+  }
+
   try {
-    if (!sig || !webhookSecret) return;
     event = stripeAdmin.webhooks.constructEvent(body, sig, webhookSecret);
   } catch (error) {
     return Response.json(`Webhook Error: ${(error as any).message}`, { status: 400 });
