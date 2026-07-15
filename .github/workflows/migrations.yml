@@ -1,0 +1,47 @@
+name: Apply database migrations
+
+# Migrations must reach production with (or before) the code that depends on them — a deploy that
+# lands first will 500 on any query touching a column that doesn't exist yet. This runs on every
+# push to main that touches migrations, so schema and code ship together.
+#
+# The Vercel build races this job, so migrations must stay backward-compatible with the currently
+# deployed code: add columns, don't drop or rename them. Removals go in a later migration, after the
+# code that used them is gone (expand/contract).
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'supabase/migrations/**'
+  # Allows a manual run from the Actions tab, e.g. to apply a migration merged before this workflow
+  # existed.
+  workflow_dispatch:
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    # Prevents two pushes in quick succession from applying migrations concurrently.
+    concurrency:
+      group: production-migrations
+      cancel-in-progress: false
+    env:
+      SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+      SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      SUPABASE_PROJECT_ID: ${{ secrets.SUPABASE_PROJECT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # Pinned to the same version as the `supabase` devDependency. `latest` would silently drift
+      # from local and apply migrations with a CLI nobody has tested against this schema.
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 1.226.4
+
+      - name: Link to production project
+        run: supabase link --project-ref "$SUPABASE_PROJECT_ID"
+
+      - name: Show pending migrations
+        run: supabase migration list
+
+      - name: Apply migrations
+        run: supabase db push

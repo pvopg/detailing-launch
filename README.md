@@ -148,7 +148,27 @@ create table invites (
 alter table invites enable row level security;
 ```
 
-Then run `npm run migration:up` and your table will be added.
+Then run `npm run migration:up`. This applies pending migrations to your **local** database and
+regenerates `src/libs/supabase/types.ts` from it, so the checked-in types always match the
+checked-in migrations.
+
+**Production migrations are applied by CI.** `.github/workflows/migrations.yml` runs `supabase db
+push` on every push to `main` that touches `supabase/migrations/`, so schema and code ship together
+— a deploy that lands before its migration will 500 on any query using the new column. It needs
+three repo secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, and `SUPABASE_PROJECT_ID`.
+
+Because the CI job and the Vercel build race each other, migrations must stay backward-compatible
+with the currently deployed code: add columns, don't drop or rename them. Removals belong in a
+later migration, once the code that used them is gone.
+
+To apply migrations to production by hand (rare — prefer CI), put a `SUPABASE_DB_URL` pointing at
+the production database in `.env.prod` and run `npm run db:push:prod`. The target is explicit rather
+than depending on whichever project you last linked. `npm run db:diff:prod` shows drift between
+production and your migrations without changing anything.
+
+Production credentials live in `.env.prod` deliberately: Next.js auto-loads `.env.production.local`
+whenever `NODE_ENV=production`, so a local `npm run build` would silently connect to the production
+database. Next ignores `.env.prod`, and only the scripts that name it explicitly can read it.
 
 ### Configuring auth providers
 
