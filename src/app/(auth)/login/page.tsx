@@ -1,21 +1,17 @@
 import { redirect } from 'next/navigation';
 
+import { getEntitlements } from '@/features/account/controllers/get-entitlements';
 import { getSession } from '@/features/account/controllers/get-session';
-import { getSubscription } from '@/features/account/controllers/get-subscription';
 
 import { signInWithEmail, signInWithOAuth } from '../auth-actions';
 import { AuthUI } from '../auth-ui';
 
 export default async function LoginPage() {
   const session = await getSession();
-  const subscription = await getSubscription();
 
-  if (session && subscription) {
-    redirect('/account');
-  }
-
-  if (session && !subscription) {
-    redirect('/pricing');
+  if (session) {
+    const { hasFoundation, hasBusinessSystems } = await getEntitlements();
+    redirect(hasFoundation || hasBusinessSystems ? '/account' : '/pricing');
   }
 
   return (

@@ -12,8 +12,8 @@ import { toast } from '@/components/ui/use-toast';
 import { ActionResponse } from '@/types/action-response';
 
 const titleMap = {
-  login: 'Login to UPDATE_THIS_WITH_YOUR_APP_DISPLAY_NAME',
-  signup: 'Join UPDATE_THIS_WITH_YOUR_APP_DISPLAY_NAME and start generating banners for free',
+  login: 'Log in to your detailing portal',
+  signup: 'Create your account',
 } as const;
 
 export function AuthUI({
@@ -64,14 +64,14 @@ export function AuthUI({
   }
 
   return (
-    <section className='mt-16 flex w-full flex-col gap-16 rounded-lg bg-black p-10 px-4 text-center'>
+    <section className='mt-16 flex w-full flex-col gap-12 rounded-lg border border-border bg-card p-10 px-4 text-center shadow-sm'>
       <div className='flex flex-col gap-4'>
         <Image src='/logo.png' width={80} height={80} alt='' className='m-auto' />
         <h1 className='text-lg'>{titleMap[mode]}</h1>
       </div>
       <div className='flex flex-col gap-4'>
         <button
-          className='flex items-center justify-center gap-2 rounded-md bg-cyan-500 py-4 font-medium text-black transition-all hover:bg-cyan-400 disabled:bg-neutral-700'
+          className='flex items-center justify-center gap-2 rounded-sm border border-border bg-background py-4 font-semibold text-foreground transition-all hover:bg-muted disabled:opacity-50'
           onClick={() => handleOAuthClick('google')}
           disabled={pending}
         >
@@ -79,7 +79,7 @@ export function AuthUI({
           Continue with Google
         </button>
         <button
-          className='flex items-center justify-center gap-2 rounded-md bg-fuchsia-500 py-4 font-medium text-black transition-all hover:bg-fuchsia-400 disabled:bg-neutral-700'
+          className='flex items-center justify-center gap-2 rounded-sm bg-primary py-4 font-semibold text-primary-foreground transition-all hover:bg-ink-900 disabled:opacity-50'
           onClick={() => handleOAuthClick('github')}
           disabled={pending}
         >
@@ -90,14 +90,14 @@ export function AuthUI({
         <Collapsible open={emailFormOpen} onOpenChange={setEmailFormOpen}>
           <CollapsibleTrigger asChild>
             <button
-              className='text-neutral6 flex w-full items-center justify-center gap-2 rounded-md bg-zinc-900 py-4 font-medium transition-all hover:bg-zinc-800 disabled:bg-neutral-700 disabled:text-black'
+              className='flex w-full items-center justify-center gap-2 rounded-sm border border-border bg-background py-4 font-semibold text-foreground transition-all hover:bg-muted disabled:opacity-50'
               disabled={pending}
             >
               Continue with Email
             </button>
           </CollapsibleTrigger>
           <CollapsibleContent>
-            <div className='mt-[-2px] w-full rounded-b-md bg-zinc-900 p-8'>
+            <div className='mt-2 w-full rounded-sm border border-border bg-muted p-8'>
               <form onSubmit={handleEmailSubmit}>
                 <Input
                   type='email'

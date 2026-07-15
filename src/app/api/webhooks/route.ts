@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 
+import { grantEntitlementFromCheckout } from '@/features/account/controllers/grant-entitlement';
 import { upsertUserSubscription } from '@/features/account/controllers/upsert-user-subscription';
 import { upsertPrice } from '@/features/pricing/controllers/upsert-price';
 import { upsertProduct } from '@/features/pricing/controllers/upsert-product';
@@ -61,6 +62,8 @@ export async function POST(req: Request) {
               customerId: checkoutSession.customer as string,
               isCreateAction: true,
             });
+          } else if (checkoutSession.mode === 'payment') {
+            await grantEntitlementFromCheckout(checkoutSession);
           }
           break;
         default:

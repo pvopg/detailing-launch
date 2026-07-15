@@ -4,107 +4,53 @@
   },
   "fixtures": [
     {
-      "name": "basic",
+      "name": "foundation",
       "path": "/v1/products",
       "method": "post",
       "params": {
-        "name": "Basic",
-        "description": "Perfect product for small businesses.",
+        "name": "Mobile Detailing Digital Foundation Kit",
+        "description": "A guided portal roadmap showing which digital systems you need, why each matters, and what to build first.",
         "metadata": {
-          "price_card_variant": "basic",
-          "generated_images": 10,
-          "image_editor": "basic",
-          "support_level": "email"
+          "tier": "foundation",
+          "index": "0",
+          "features": "Interactive digital-infrastructure roadmap|Saved business-setup checklist|Website & inquiry requirements|Booking-versus-quote guidance|Lead-to-review workflow|Software guidance by use case|Domain, email & Google Business Profile guidance|30-day implementation plan|Official vendor setup links"
         }
       }
     },
     {
-      "name": "price_basic_month",
+      "name": "price_foundation",
       "path": "/v1/prices",
       "method": "post",
       "params": {
-        "product": "${basic:id}",
+        "product": "${foundation:id}",
         "currency": "usd",
         "billing_scheme": "per_unit",
-        "unit_amount": 500,
-        "recurring": {
-          "interval": "month",
-          "interval_count": 1
-        }
+        "unit_amount": 2000
       }
     },
     {
-      "name": "price_basic_year",
-      "path": "/v1/prices",
-      "method": "post",
-      "params": {
-        "product": "${basic:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 5000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "pro",
+      "name": "business_systems",
       "path": "/v1/products",
       "method": "post",
       "params": {
-        "name": "Pro",
-        "description": "Perfect product for growing or large businesses.",
+        "name": "Mobile Detailing Business Systems Kit",
+        "description": "An interactive workspace to put a professional service, pricing, customer, and follow-up system into practice.",
         "metadata": {
-          "price_card_variant": "pro",
-          "generated_images": 100,
-          "image_editor": "pro",
-          "support_level": "live"
+          "tier": "business_systems",
+          "index": "1",
+          "features": "Everything in Foundation|Saved service & package builder|Pricing & profitability calculator|Customer-workflow planner|Personalized message library|Software finder & saved tool choices|Searchable resource area|Progress dashboard & next actions|Consultation invitation"
         }
       }
     },
     {
-      "name": "price_pro_month",
+      "name": "price_business_systems",
       "path": "/v1/prices",
       "method": "post",
       "params": {
-        "product": "${pro:id}",
+        "product": "${business_systems:id}",
         "currency": "usd",
         "billing_scheme": "per_unit",
-        "unit_amount": 1000,
-        "recurring": {
-          "interval": "month",
-          "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "price_pro_year",
-      "path": "/v1/prices",
-      "method": "post",
-      "params": {
-        "product": "${pro:id}",
-        "currency": "usd",
-        "billing_scheme": "per_unit",
-        "unit_amount": 10000,
-        "recurring": {
-          "interval": "year",
-          "interval_count": 1
-        }
-      }
-    },
-    {
-      "name": "enterprise",
-      "path": "/v1/products",
-      "method": "post",
-      "params": {
-        "name": "Enterprise",
-        "description": "Perfect product for enterprises.",
-        "metadata": {
-          "price_card_variant": "enterprise",
-          "image_editor": "pro",
-          "support_level": "live"
-        }
+        "unit_amount": 9900
       }
     }
   ]

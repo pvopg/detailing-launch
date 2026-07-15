@@ -1,130 +1,68 @@
-import Image from 'next/image';
-import Link from 'next/link';
+import type { Metadata } from 'next';
 
-import { Container } from '@/components/container';
-import { Button } from '@/components/ui/button';
-import { PricingSection } from '@/features/pricing/components/pricing-section';
+import { BuyerFitSection } from '@/features/marketing/components/buyer-fit-section';
+import { ConnectedSystemSection } from '@/features/marketing/components/connected-system-section';
+import { ConsultationSection } from '@/features/marketing/components/consultation-section';
+import { FaqSection } from '@/features/marketing/components/faq-section';
+import { FeatureGrid } from '@/features/marketing/components/feature-grid';
+import { FinalCtaSection } from '@/features/marketing/components/final-cta-section';
+import { HeroSection } from '@/features/marketing/components/hero-section';
+import { HowItWorksSection } from '@/features/marketing/components/how-it-works-section';
+import { PortalPreviewSection } from '@/features/marketing/components/portal-preview-section';
+import { MarketingPricingSection } from '@/features/marketing/components/pricing-section';
+import { ProblemSection } from '@/features/marketing/components/problem-section';
+import { ProductProofSection } from '@/features/marketing/components/product-proof-section';
+import { StructuredData } from '@/features/marketing/components/structured-data';
+import { LandingViewBeacon } from '@/features/marketing/components/track-in-view';
+import { TrustStrip } from '@/features/marketing/components/trust-strip';
+import { landingContent } from '@/features/marketing/content';
+import { reportLaunchIssues } from '@/features/marketing/launch-checks';
+import { getURL } from '@/utils/get-url';
+
+const { seo } = landingContent;
+const canonical = getURL(seo.path);
+
+export const metadata: Metadata = {
+  title: seo.title,
+  description: seo.description,
+  alternates: { canonical },
+  openGraph: {
+    type: 'website',
+    siteName: 'pgGallery',
+    title: seo.title,
+    description: seo.description,
+    url: canonical,
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: seo.title,
+    description: seo.description,
+  },
+};
 
 export default async function HomePage() {
+  // Launch-blocking content checks (unapproved refund copy, unresolved consultation credit, etc.)
+  // are surfaced in server logs on every render so gaps stay visible before launch.
+  reportLaunchIssues();
+
   return (
-    <div className='flex flex-col gap-8 lg:gap-32'>
+    <div className='flex flex-col gap-20 py-8 lg:gap-28'>
+      <StructuredData />
+      <LandingViewBeacon />
+
       <HeroSection />
-      <ExamplesSection />
-      <PricingSection />
+      <TrustStrip />
+      <ProblemSection />
+      <ConnectedSystemSection />
+      <FeatureGrid />
+      <PortalPreviewSection />
+      <ProductProofSection />
+      <BuyerFitSection />
+      <HowItWorksSection />
+      <MarketingPricingSection />
+      <ConsultationSection />
+      <FaqSection />
+      <FinalCtaSection />
     </div>
-  );
-}
-
-function HeroSection() {
-  return (
-    <section className='relative overflow-hidden lg:overflow-visible'>
-      <Container className='relative rounded-lg bg-black py-20 lg:py-[140px]'>
-        <div className='relative z-10 flex flex-col gap-5 lg:max-w-xl lg:pl-8'>
-          <div className='w-fit rounded-full bg-gradient-to-r from-[#616571] via-[#7782A9] to-[#826674] px-4 py-1 '>
-            <span className='font-alt text-sm font-semibold text-black mix-blend-soft-light'>
-              Generate banners with DALL·E
-            </span>
-          </div>
-          <h1>Instantly craft stunning Twitter banners.</h1>
-          <Button asChild variant='sexy'>
-            <Link href='/signup'>Get started for free</Link>
-          </Button>
-        </div>
-      </Container>
-      <Image
-        src='/hero-shape.png'
-        width={867}
-        height={790}
-        alt=''
-        className='absolute right-0 top-0 rounded-tr-lg'
-        priority
-        quality={100}
-      />
-    </section>
-  );
-}
-
-function ExamplesSection() {
-  return (
-    <section className='flex flex-col gap-4 overflow-hidden rounded-lg bg-black py-8'>
-      <div className='flex justify-center gap-4'>
-        <Image
-          className='flex-shrink-0'
-          src='/example1.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example2.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example3.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-      </div>
-      <div className='flex gap-4'>
-        <Image
-          className='flex-shrink-0'
-          src='/example4.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example5.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example6.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-      </div>
-      <div className='flex justify-center gap-4'>
-        <Image
-          className='flex-shrink-0'
-          src='/example7.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example8.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-        <Image
-          className='flex-shrink-0'
-          src='/example9.png'
-          width={600}
-          height={200}
-          alt='Example of a generated banner'
-          quality={100}
-        />
-      </div>
-    </section>
   );
 }
