@@ -17,10 +17,9 @@
     "supabase:login": "env-cmd -f ./.env.local supabase login",
     "supabase:start": "env-cmd -f ./.env.local supabase start",
     "supabase:stop": "supabase stop",
-    "supabase:push-config": "env-cmd -f ./.env.local supabase config push",
     "migration:new": "supabase migration new",
-    "migration:up": "supabase migration up --local && npm run generate-types",
-    "migration:squash": "supabase migration squash --linked",
+    "migration:up": "supabase migration up --local",
+    "migration:squash": "supabase migration squash --local",
     "db:push:prod": "env-cmd -f ./.env.prod supabase db push --db-url $SUPABASE_DB_URL",
     "db:diff:prod": "env-cmd -f ./.env.prod supabase db diff --db-url $SUPABASE_DB_URL --schema public"
   },
