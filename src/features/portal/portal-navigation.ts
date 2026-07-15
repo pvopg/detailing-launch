@@ -49,40 +49,50 @@ export const FOUNDATION_MODULES: PortalModule[] = [
   },
   {
     slug: 'inquiries-quotes-booking',
-    title: 'Inquiries, quotes & booking',
-    description: 'Stop losing important customer details in DMs and text threads.',
+    title: 'Inquiries, Quotes & Booking',
+    // Approved public/locked discovery summary — the only guide-4 body copy a locked tier may receive.
+    description:
+      'Create a dependable path from inquiry to written quote and confirmed booking, with clear customer information, statuses, scheduling rules, and follow-up.',
     tier: 'foundation',
     kind: 'guide',
     persistence: 'checklist_progress',
   },
   {
     slug: 'deposits-payments',
-    title: 'Deposits & payments',
-    description: 'Make payment expectations clear before the appointment.',
+    title: 'Deposits & Payments',
+    // Approved public/locked discovery summary — the only guide-5 body copy a locked tier may receive.
+    description:
+      'Set up secure deposits and payments tied to accepted quotes, verified booking states, clear receipts, refunds, disputes, and reconciled business records.',
     tier: 'foundation',
     kind: 'guide',
     persistence: 'checklist_progress',
   },
   {
-    slug: 'customer-tracking',
-    title: 'Customer tracking & follow-up',
-    description: 'Give every inquiry a status and a next action.',
+    slug: 'customer-tracking-follow-up',
+    title: 'Customer Tracking & Follow-Up',
+    // Approved public/locked discovery summary — the only guide-6 body copy a locked tier may receive.
+    description:
+      'Create one secure customer record with useful service history, communication preferences, statuses, next actions, follow-up, suppression, retention, and backup controls.',
     tier: 'foundation',
     kind: 'guide',
     persistence: 'checklist_progress',
   },
   {
-    slug: 'reviews-repeat',
-    title: 'Reviews & repeat business',
-    description: 'Turn completed jobs into trust and future revenue.',
+    slug: 'reviews-repeat-business',
+    title: 'Reviews & Repeat Business',
+    // Approved public/locked discovery summary — the only guide-7 body copy a locked tier may receive.
+    description:
+      'Request honest reviews without gating or incentives, respond professionally, and create permission-aware repeat-business and referral opportunities that remain separate from review activity.',
     tier: 'foundation',
     kind: 'guide',
     persistence: 'checklist_progress',
   },
   {
     slug: 'analytics-30-day-plan',
-    title: 'Analytics & 30-day plan',
-    description: 'Complete the setup in a realistic order and confirm that it works.',
+    title: 'Analytics & 30-Day Plan',
+    // Approved public/locked discovery summary — the only guide-8 body copy a locked tier may receive.
+    description:
+      'Create a trustworthy scorecard, verify website and Google measurement sources, and turn one customer-journey bottleneck into a focused 30-day improvement cycle.',
     tier: 'foundation',
     kind: 'guide',
     persistence: 'checklist_progress',
@@ -126,14 +136,6 @@ export const BUSINESS_SYSTEMS_MODULES: PortalModule[] = [
     slug: 'software-finder',
     title: 'Software finder & saved choices',
     description: 'Pick tools per use case and save your stack decisions in one place.',
-    tier: 'business_systems',
-    kind: 'tool',
-    persistence: 'portal_module_state',
-  },
-  {
-    slug: 'dashboard',
-    title: 'Progress dashboard & next actions',
-    description: 'See your saved progress across modules and the recommended next steps.',
     tier: 'business_systems',
     kind: 'tool',
     persistence: 'portal_module_state',

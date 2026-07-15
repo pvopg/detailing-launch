@@ -134,6 +134,12 @@ export function GuideChecklist({
                       <ExampleHint example={item.example} itemTitle={item.title} />
                     </div>
                     {item.description && <span className='text-sm text-muted-foreground'>{item.description}</span>}
+                    {item.completionEvidence && (
+                      <span className='text-sm text-muted-foreground'>
+                        <span className='font-medium text-foreground'>Done when: </span>
+                        {item.completionEvidence}
+                      </span>
+                    )}
                   </div>
                 </div>
               );

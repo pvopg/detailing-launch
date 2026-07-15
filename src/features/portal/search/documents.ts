@@ -23,11 +23,36 @@ function guideDocuments(guide: GuideContent): ProtectedSearchDocument[] {
   const bodyParts = [
     guide.outcome,
     guide.whatItDoes,
-    guide.whyItMatters,
+    ...(typeof guide.whyItMatters === 'string'
+      ? [guide.whyItMatters]
+      : guide.whyItMatters.flatMap((reason) => [reason.heading, reason.body])),
     ...guide.goodEnoughToLaunch,
+    ...(guide.notRequiredYet ?? []),
+    ...(guide.terms?.flatMap((term) => [term.term, term.definition]) ?? []),
     ...(guide.commonMistakes ?? []),
     ...(guide.diagram ?? []),
     ...(guide.callouts?.map((callout) => callout.body) ?? []),
+    ...(guide.tables?.flatMap((table) => [
+      table.title,
+      table.caption,
+      ...table.columns,
+      ...table.rows.flat(),
+      table.note,
+    ]) ?? []),
+    ...(guide.timeline
+      ? [
+          guide.timeline.title,
+          guide.timeline.intro,
+          ...guide.timeline.phases.flatMap((phase) => [phase.heading, ...phase.bullets]),
+        ]
+      : []),
+    ...(guide.detailBlocks?.flatMap((block) => [
+      block.title,
+      block.body,
+      ...(block.bullets ?? []),
+      ...(block.items?.flatMap((item) => [item.heading, item.body]) ?? []),
+    ]) ?? []),
+    guide.disclaimer,
   ];
 
   docs.push({
@@ -39,12 +64,13 @@ function guideDocuments(guide: GuideContent): ProtectedSearchDocument[] {
     type: 'guide',
     requiredTier: 'foundation',
     guideSlug: guide.slug,
+    keywords: guide.searchKeywords,
   });
 
   // One document per checklist item; the optional instructional example is folded into the body so
   // it is searchable without being a separately-navigable destination.
   for (const item of guide.checklist) {
-    const itemBody = [item.title, item.description, item.example].filter(Boolean).join(' \n');
+    const itemBody = [item.title, item.description, item.example, item.completionEvidence].filter(Boolean).join(' \n');
     docs.push({
       id: `checklist:${guide.slug}:${item.id}`,
       title: item.title,
@@ -57,8 +83,10 @@ function guideDocuments(guide: GuideContent): ProtectedSearchDocument[] {
     });
   }
 
-  // Official vendor links authored on the guide become resource documents.
-  for (const link of guide.vendorLinks ?? []) {
+  // Official vendor links authored on the guide become resource documents — both the flat list and
+  // any grouped links contribute.
+  const allVendorLinks = [...(guide.vendorLinks ?? []), ...(guide.vendorLinkGroups?.flatMap((group) => group.links) ?? [])];
+  for (const link of allVendorLinks) {
     docs.push({
       id: `resource:${guide.slug}:${link.href}`,
       title: link.label,

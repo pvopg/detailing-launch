@@ -19,15 +19,14 @@ const KEYWORDS: Record<string, string[]> = {
   'website-gbp': ['website', 'google business profile', 'gbp', 'maps', 'listing'],
   'inquiries-quotes-booking': ['inquiry', 'quote', 'booking', 'leads'],
   'deposits-payments': ['deposit', 'payment', 'invoice', 'balance'],
-  'customer-tracking': ['crm', 'leads', 'follow up', 'pipeline'],
-  'reviews-repeat': ['review', 'google review', 'repeat', 'referral'],
-  'analytics-30-day-plan': ['analytics', 'metrics', 'launch plan'],
+  'customer-tracking-follow-up': ['crm', 'customer record', 'follow up', 'next action', 'suppression', 'unsubscribe'],
+  'reviews-repeat-business': ['review', 'google review', 'repeat', 'referral'],
+  'analytics-30-day-plan': ['analytics', 'metrics', 'scorecard', 'measurement', '30-day plan', 'launch plan'],
   'service-builder': ['services', 'packages', 'menu', 'pricing'],
   'pricing-calculator': ['pricing', 'profit', 'margin', 'cost', 'labor'],
   'workflow-planner': ['workflow', 'process', 'stages', 'touch points'],
   'message-library': ['messages', 'templates', 'scripts', 'replies'],
   'software-finder': ['software', 'tools', 'apps', 'stack'],
-  dashboard: ['dashboard', 'progress', 'next steps'],
 };
 
 export const discoveryItems: SearchDiscoveryItem[] = PORTAL_MODULES.map((mod) => ({
