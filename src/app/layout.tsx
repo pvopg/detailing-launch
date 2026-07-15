@@ -1,10 +1,9 @@
 import { PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Manrope } from 'next/font/google';
-import Link from 'next/link';
-import { IoLogoFacebook, IoLogoInstagram, IoLogoTwitter } from 'react-icons/io5';
 
 import { Logo } from '@/components/logo';
+import { SiteFooter } from '@/components/site-footer';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/utils/cn';
 import { Analytics } from '@vercel/analytics/react';
@@ -41,17 +40,21 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
-    <html lang='en'>
+    // suppressHydrationWarning: the pre-paint script adds `.reveal-enabled` to <html> before React
+    // hydrates, so the server/client class list intentionally differs on this element.
+    <html lang='en' suppressHydrationWarning>
       <body
         suppressHydrationWarning
         className={cn('font-sans antialiased', geist.variable, manrope.variable, geistMono.variable)}
       >
+        {/* Enables scroll-reveal only when JS is live, before first paint — so no-JS renders visible. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-enabled')" }} />
         <div className='m-auto flex h-full max-w-[1440px] flex-col px-4'>
           <AppBar />
           <main className='relative flex-1'>
             <div className='relative h-full'>{children}</div>
           </main>
-          <Footer />
+          <SiteFooter />
         </div>
         <Toaster />
         <Analytics />
@@ -66,61 +69,5 @@ async function AppBar() {
       <Logo />
       <Navigation />
     </header>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className='mt-16 flex flex-col gap-8 text-muted-foreground lg:mt-24'>
-      <div className='flex flex-col justify-between gap-8 lg:flex-row'>
-        <div>
-          <Logo />
-        </div>
-        <div className='grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-4 lg:gap-16'>
-          <div className='flex flex-col gap-2 lg:gap-6'>
-            <div className='font-semibold text-foreground'>Product</div>
-            <nav className='flex flex-col gap-2 lg:gap-6'>
-              <Link href='/pricing'>Pricing</Link>
-            </nav>
-          </div>
-          <div className='flex flex-col gap-2 lg:gap-6'>
-            <div className='font-semibold text-foreground'>Company</div>
-            <nav className='flex flex-col gap-2 lg:gap-6'>
-              <Link href='/about-us'>About Us</Link>
-              <Link href='/privacy'>Privacy</Link>
-            </nav>
-          </div>
-          <div className='flex flex-col gap-2 lg:gap-6'>
-            <div className='font-semibold text-foreground'>Support</div>
-            <nav className='flex flex-col gap-2 lg:gap-6'>
-              <Link href='/support'>Get Support</Link>
-            </nav>
-          </div>
-          <div className='flex flex-col gap-2 lg:gap-6'>
-            <div className='font-semibold text-foreground'>Follow us</div>
-            <nav className='flex flex-col gap-2 lg:gap-6'>
-              <Link href='#'>
-                <span className='flex items-center gap-2'>
-                  <IoLogoTwitter size={22} /> <span>Twitter</span>
-                </span>
-              </Link>
-              <Link href='#'>
-                <span className='flex items-center gap-2'>
-                  <IoLogoFacebook size={22} /> <span>Facebook</span>
-                </span>
-              </Link>
-              <Link href='#'>
-                <span className='flex items-center gap-2'>
-                  <IoLogoInstagram size={22} /> <span>Instagram</span>
-                </span>
-              </Link>
-            </nav>
-          </div>
-        </div>
-      </div>
-      <div className='border-t border-border py-6 text-center'>
-        <span className='text-xs text-muted-foreground'>Copyright {new Date().getFullYear()} © pgGallery</span>
-      </div>
-    </footer>
   );
 }

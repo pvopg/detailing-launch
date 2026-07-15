@@ -206,6 +206,44 @@
   }
 }
 
+@layer utilities {
+  /*
+   * Scroll reveal (marketing landing). Elements render fully visible by default so the page is
+   * intact with no JS, on the server, and for reduced-motion users. A tiny inline script adds
+   * `.reveal-enabled` to <html> before first paint; only then do reveal targets start hidden and
+   * animate in once (the observer adds `.is-visible`). This never hides content unless JS is live.
+   */
+  .reveal-enabled [data-reveal] {
+    opacity: 0;
+    transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 0), 0);
+    transition:
+      opacity var(--reveal-duration, 600ms) var(--ease-out),
+      transform var(--reveal-duration, 600ms) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+  .reveal-enabled [data-reveal].is-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+
+  /* Hero on-load entrance — pure CSS so it runs without JS and doesn't gate above-the-fold paint. */
+  .animate-fade-rise {
+    animation: fade-rise 700ms var(--ease-out) both;
+  }
+}
+
+@keyframes fade-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -214,5 +252,11 @@
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+  /* Reveal targets must be fully visible regardless of the observer for reduced-motion users. */
+  .reveal-enabled [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
   }
 }
