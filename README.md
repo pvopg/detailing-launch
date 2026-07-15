@@ -159,8 +159,14 @@ push` on every push to `main` that touches `supabase/migrations/`, so schema and
 It needs one secret: `SUPABASE_DB_URL`, set as an **environment** secret on the `Production`
 environment (Settings → Environments → Production). The workflow declares `environment: Production`
 to read it; a job without that line sees environment secrets as empty strings rather than an error.
-Use the session pooler or direct connection string (port 5432) — migrations fail on the transaction
-pooler (6543), which doesn't support session-level statements.
+
+Use the **session pooler** string — `postgres.<ref>@aws-0-<region>.pooler.supabase.com:5432`. The
+other two options both fail from CI:
+
+- The direct connection (`db.<ref>.supabase.co:5432`) is IPv6-only and GitHub Actions runners have
+  no IPv6 route, so it fails with "network is unreachable". It works from a laptop, which is what
+  makes it a trap.
+- The transaction pooler (port 6543) is IPv4 but has no session mode, which migrations need.
 
 Because the CI job and the Vercel build race each other, migrations must stay backward-compatible
 with the currently deployed code: add columns, don't drop or rename them. Removals belong in a

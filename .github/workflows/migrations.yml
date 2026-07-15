@@ -44,9 +44,29 @@ jobs:
         with:
           version: 1.226.4
 
-      # Fail loudly on an empty secret rather than letting the CLI report something misleading.
-      - name: Check database URL is present
-        run: test -n "$SUPABASE_DB_URL" || { echo "SUPABASE_DB_URL is empty"; exit 1; }
+      # Fail loudly and specifically, rather than letting the CLI report an empty secret as a DSN
+      # parse error or an unroutable host as a generic dial failure.
+      - name: Check database URL
+        run: |
+          if [ -z "$SUPABASE_DB_URL" ]; then
+            echo "SUPABASE_DB_URL is empty. It must be an environment secret on the Production"
+            echo "environment, and this job must declare 'environment: Production' to read it."
+            exit 1
+          fi
+          case "$SUPABASE_DB_URL" in
+            postgresql://*|postgres://*) ;;
+            *) echo "SUPABASE_DB_URL is not a Postgres DSN (expected postgresql://...)."; exit 1 ;;
+          esac
+          case "$SUPABASE_DB_URL" in
+            *db.*.supabase.co*)
+              echo "SUPABASE_DB_URL is the direct connection, which is IPv6-only. GitHub runners"
+              echo "have no IPv6 route. Use the session pooler: pooler.supabase.com:5432"
+              exit 1 ;;
+            *:6543/*)
+              echo "SUPABASE_DB_URL is the transaction pooler (6543), which has no session mode."
+              echo "Migrations need the session pooler on port 5432."
+              exit 1 ;;
+          esac
 
       - name: Show pending migrations
         run: supabase migration list --db-url "$SUPABASE_DB_URL"
