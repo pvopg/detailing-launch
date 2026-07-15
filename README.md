@@ -154,8 +154,13 @@ checked-in migrations.
 
 **Production migrations are applied by CI.** `.github/workflows/migrations.yml` runs `supabase db
 push` on every push to `main` that touches `supabase/migrations/`, so schema and code ship together
-— a deploy that lands before its migration will 500 on any query using the new column. It needs
-three repo secrets: `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD`, and `SUPABASE_PROJECT_ID`.
+— a deploy that lands before its migration will 500 on any query using the new column.
+
+It needs one secret: `SUPABASE_DB_URL`, set as an **environment** secret on the `Production`
+environment (Settings → Environments → Production). The workflow declares `environment: Production`
+to read it; a job without that line sees environment secrets as empty strings rather than an error.
+Use the session pooler or direct connection string (port 5432) — migrations fail on the transaction
+pooler (6543), which doesn't support session-level statements.
 
 Because the CI job and the Vercel build race each other, migrations must stay backward-compatible
 with the currently deployed code: add columns, don't drop or rename them. Removals belong in a
