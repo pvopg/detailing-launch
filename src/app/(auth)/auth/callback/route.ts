@@ -25,8 +25,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Route based on whether the user owns any kit. New signups land on pricing; existing
-    // customers go straight to their account.
-    const { data: entitlement } = await supabase.from('entitlements').select('tier').limit(1).maybeSingle();
+    // customers go straight to their account. Refunded users no longer own a live entitlement,
+    // so they route back to pricing.
+    const { data: entitlement } = await supabase
+      .from('entitlements')
+      .select('tier')
+      .is('revoked_at', null)
+      .limit(1)
+      .maybeSingle();
 
     if (!entitlement) {
       return NextResponse.redirect(`${siteUrl}/pricing`);

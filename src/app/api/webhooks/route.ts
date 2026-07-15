@@ -1,6 +1,10 @@
 import Stripe from 'stripe';
 
 import { grantEntitlementFromCheckout } from '@/features/account/controllers/grant-entitlement';
+import {
+  revokeEntitlementFromDispute,
+  revokeEntitlementFromRefund,
+} from '@/features/account/controllers/revoke-entitlement';
 import { upsertUserSubscription } from '@/features/account/controllers/upsert-user-subscription';
 import { upsertPrice } from '@/features/pricing/controllers/upsert-price';
 import { upsertProduct } from '@/features/pricing/controllers/upsert-product';
@@ -13,6 +17,8 @@ const relevantEvents = new Set([
   'price.created',
   'price.updated',
   'checkout.session.completed',
+  'charge.refunded',
+  'charge.dispute.created',
   'customer.subscription.created',
   'customer.subscription.updated',
   'customer.subscription.deleted',
@@ -54,6 +60,12 @@ export async function POST(req: Request) {
             customerId: subscription.customer as string,
             isCreateAction: false,
           });
+          break;
+        case 'charge.refunded':
+          await revokeEntitlementFromRefund(event.data.object as Stripe.Charge);
+          break;
+        case 'charge.dispute.created':
+          await revokeEntitlementFromDispute(event.data.object as Stripe.Dispute);
           break;
         case 'checkout.session.completed':
           const checkoutSession = event.data.object as Stripe.Checkout.Session;

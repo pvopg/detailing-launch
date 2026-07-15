@@ -48,6 +48,10 @@ export async function grantEntitlementFromCheckout(checkoutSession: Stripe.Check
     tier: metadata.data.tier,
     price_id: priceId,
     stripe_checkout_session_id: checkoutSession.id,
+    // Sent explicitly so buying again after a refund clears the tombstone. The upsert below only
+    // updates columns present in the payload, so omitting these would leave a repurchaser revoked.
+    revoked_at: null,
+    revoked_reason: null,
   };
 
   // Idempotent on (user_id, tier): webhook replays and repeat purchases of the same tier both

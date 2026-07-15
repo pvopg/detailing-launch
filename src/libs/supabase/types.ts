@@ -55,6 +55,8 @@ export type Database = {
           granted_at: string
           id: string
           price_id: string | null
+          revoked_at: string | null
+          revoked_reason: string | null
           stripe_checkout_session_id: string | null
           tier: Database["public"]["Enums"]["entitlement_tier"]
           user_id: string
@@ -63,6 +65,8 @@ export type Database = {
           granted_at?: string
           id?: string
           price_id?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
           stripe_checkout_session_id?: string | null
           tier: Database["public"]["Enums"]["entitlement_tier"]
           user_id: string
@@ -71,6 +75,8 @@ export type Database = {
           granted_at?: string
           id?: string
           price_id?: string | null
+          revoked_at?: string | null
+          revoked_reason?: string | null
           stripe_checkout_session_id?: string | null
           tier?: Database["public"]["Enums"]["entitlement_tier"]
           user_id?: string
