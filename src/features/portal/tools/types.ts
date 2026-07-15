@@ -5,6 +5,13 @@
  * `./normalize.ts`).
  */
 
+/**
+ * Draft while the member is still shaping an item; active once they finalize it. A list-based tool
+ * counts as complete only when every item is finalized (active). Shared by services, pricing
+ * scenarios, saved messages, and workflow stages.
+ */
+export type DraftStatus = 'draft' | 'active';
+
 /** A reusable, named service or package the detailer offers. */
 export interface ServicePackage {
   id: string;
@@ -18,6 +25,7 @@ export interface ServicePackage {
   description: string;
   /** Line items included in the package. */
   includes: string[];
+  status: DraftStatus;
 }
 
 export interface ServiceBuilderState {
@@ -47,6 +55,7 @@ export interface PricingScenario {
   price: number;
   /** Used in `margin` mode: the net profit margin to target, as a percent. */
   targetMargin: number;
+  status: DraftStatus;
 }
 
 export interface PricingCalculatorState {
@@ -64,6 +73,9 @@ export interface WorkflowTouchpoint {
   timing: string;
 }
 
+/** Whether a stage is still being drafted, or has been finalized as part of the active workflow. */
+export type WorkflowStageStatus = 'draft' | 'active';
+
 /** A stage in the lead-to-review journey, with the touch points that move a customer through it. */
 export interface WorkflowStage {
   id: string;
@@ -71,6 +83,8 @@ export interface WorkflowStage {
   /** What "done" looks like for this stage. */
   goal: string;
   touchpoints: WorkflowTouchpoint[];
+  /** Draft while the member is still shaping it; active once they finalize it into their workflow. */
+  status: WorkflowStageStatus;
 }
 
 export interface WorkflowPlannerState {
@@ -87,6 +101,7 @@ export interface SavedMessage {
   label: string;
   category: MessageCategory;
   body: string;
+  status: DraftStatus;
 }
 
 export interface MessageLibraryState {

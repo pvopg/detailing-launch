@@ -12,6 +12,7 @@ import { getPortalModule } from '../portal-navigation';
 import { createSavedMessage, normalizeMessageLibraryState } from '../tools/normalize';
 import type { MessageCategory, MessageLibraryState, SavedMessage } from '../tools/types';
 
+import { FinalizeControls, FinalizeSummary } from './finalize-controls';
 import { Field, TextInput } from './tool-fields';
 import { ToolShell } from './tool-shell';
 
@@ -65,6 +66,12 @@ export function MessageLibrary({ moduleKey, initialState }: { moduleKey: string;
         <EmptyState onCreate={addMessage} />
       ) : (
         <div className='flex flex-col gap-6'>
+          <FinalizeSummary
+            finalized={state.messages.filter((message) => message.status === 'active').length}
+            total={state.messages.length}
+            noun='messages'
+            hint='Finalize a message once its wording is ready to send — this tool is complete when every message is finalized.'
+          />
           <p className='max-w-2xl text-sm text-muted-foreground'>
             Write each message once, in your own voice. Wrap details you swap per customer in curly braces — like{' '}
             <code className='rounded bg-muted px-1 text-foreground'>{'{name}'}</code> or{' '}
@@ -117,9 +124,15 @@ function MessageCard({
   onRemove: () => void;
 }) {
   const placeholders = useMemo(() => extractPlaceholders(message.body), [message.body]);
+  const active = message.status === 'active';
 
   return (
-    <div className='flex flex-col gap-4 rounded-lg border border-border bg-card p-6 shadow-sm'>
+    <div
+      className={cn(
+        'flex flex-col gap-4 rounded-lg border bg-card p-6 shadow-sm transition-colors',
+        active ? 'border-feature-green-ink/40' : 'border-border'
+      )}
+    >
       <div className='flex items-start justify-between gap-3'>
         <Field label='Label' htmlFor={`label-${message.id}`} className='flex-1'>
           <TextInput
@@ -180,6 +193,14 @@ function MessageCard({
       )}
 
       <CopyButton body={message.body} />
+
+      <FinalizeControls
+        active={active}
+        noun='message'
+        canFinalize={message.body.trim() !== ''}
+        finalizeHint='Write the message body first.'
+        onToggle={() => onChange({ status: active ? 'draft' : 'active' })}
+      />
     </div>
   );
 }

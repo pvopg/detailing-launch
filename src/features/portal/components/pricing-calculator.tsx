@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { IoAddOutline, IoTrashOutline } from 'react-icons/io5';
+import { IoAddOutline, IoCheckmarkCircle, IoTrashOutline } from 'react-icons/io5';
 
 import { Button } from '@/components/ui/button';
 import type { Json } from '@/libs/supabase/types';
@@ -13,6 +13,7 @@ import { createPricingScenario, normalizePricingState } from '../tools/normalize
 import { computeScenario, formatCurrency, formatPercent } from '../tools/pricing';
 import type { PricingCalculatorState, PricingScenario } from '../tools/types';
 
+import { FinalizeControls, FinalizeSummary } from './finalize-controls';
 import { Field, NumberInput, TextInput } from './tool-fields';
 import { ToolShell } from './tool-shell';
 
@@ -59,6 +60,12 @@ export function PricingCalculator({ moduleKey, initialState }: { moduleKey: stri
         <EmptyState onCreate={addScenario} />
       ) : (
         <div className='flex flex-col gap-6'>
+          <FinalizeSummary
+            finalized={state.scenarios.filter((scenario) => scenario.status === 'active').length}
+            total={state.scenarios.length}
+            noun='scenarios'
+            hint='Finalize a scenario once you’re happy with its pricing — this tool is complete when every scenario is finalized.'
+          />
           <div className='flex flex-wrap items-center gap-2'>
             {state.scenarios.map((scenario) => (
               <button
@@ -66,12 +73,13 @@ export function PricingCalculator({ moduleKey, initialState }: { moduleKey: stri
                 type='button'
                 onClick={() => setActiveId(scenario.id)}
                 className={cn(
-                  'rounded-pill border px-4 py-2 text-sm transition-colors',
+                  'flex items-center gap-1.5 rounded-pill border px-4 py-2 text-sm transition-colors',
                   scenario.id === activeId
                     ? 'border-brand bg-brand-50 font-medium text-brand-600'
                     : 'border-border text-muted-foreground hover:border-brand'
                 )}
               >
+                {scenario.status === 'active' && <IoCheckmarkCircle className='text-feature-green-ink' aria-hidden />}
                 {scenario.name.trim() || 'Untitled scenario'}
               </button>
             ))}
@@ -123,7 +131,12 @@ function ScenarioEditor({
   onRemove: () => void;
 }) {
   return (
-    <div className='flex flex-col gap-6 rounded-lg border border-border bg-card p-6 shadow-sm'>
+    <div
+      className={cn(
+        'flex flex-col gap-6 rounded-lg border bg-card p-6 shadow-sm transition-colors',
+        scenario.status === 'active' ? 'border-feature-green-ink/40' : 'border-border'
+      )}
+    >
       <Field label='Scenario name' htmlFor={`name-${scenario.id}`}>
         <TextInput
           id={`name-${scenario.id}`}
@@ -222,6 +235,14 @@ function ScenarioEditor({
           </Field>
         )}
       </fieldset>
+
+      <FinalizeControls
+        active={scenario.status === 'active'}
+        noun='scenario'
+        canFinalize={scenario.name.trim() !== ''}
+        finalizeHint='Name this scenario first.'
+        onToggle={() => onChange({ status: scenario.status === 'active' ? 'draft' : 'active' })}
+      />
 
       <button
         type='button'

@@ -1,6 +1,7 @@
 import type { Json } from '@/libs/supabase/types';
 
 import type {
+  DraftStatus,
   MessageCategory,
   MessageLibraryState,
   PricingCalculatorState,
@@ -34,6 +35,11 @@ function toRecord(value: Json | null): Record<string, unknown> {
   return value && typeof value === 'object' && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
 }
 
+/** Coerce a persisted status; anything other than the finalized marker falls back to a draft. */
+function toDraftStatus(value: unknown): DraftStatus {
+  return value === 'active' ? 'active' : 'draft';
+}
+
 function newId(): string {
   // Client-only tools; crypto.randomUUID is available in the browser and in modern Node.
   return typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2);
@@ -48,6 +54,7 @@ export function createServicePackage(): ServicePackage {
     durationMinutes: 0,
     description: '',
     includes: [],
+    status: 'draft',
   };
 }
 
@@ -66,6 +73,7 @@ export function normalizeServiceBuilderState(raw: Json | null): ServiceBuilderSt
         durationMinutes: toNumber(pkg.durationMinutes),
         description: toString(pkg.description),
         includes: Array.isArray(pkg.includes) ? pkg.includes.map((item) => toString(item)) : [],
+        status: toDraftStatus(pkg.status),
       };
     }),
   };
@@ -84,6 +92,7 @@ export function createPricingScenario(): PricingScenario {
     mode: 'margin',
     price: 150,
     targetMargin: 50,
+    status: 'draft',
   };
 }
 
@@ -107,6 +116,7 @@ export function normalizePricingState(raw: Json | null): PricingCalculatorState 
         mode,
         price: toNumber(scenario.price),
         targetMargin: toNumber(scenario.targetMargin),
+        status: toDraftStatus(scenario.status),
       };
     }),
   };
@@ -117,7 +127,7 @@ export function createWorkflowTouchpoint(): WorkflowTouchpoint {
 }
 
 export function createWorkflowStage(): WorkflowStage {
-  return { id: newId(), name: '', goal: '', touchpoints: [] };
+  return { id: newId(), name: '', goal: '', touchpoints: [], status: 'draft' };
 }
 
 /** A sensible starting pipeline so a new planner is a prompt to edit, not a blank page. */
@@ -127,6 +137,8 @@ export function defaultWorkflowStages(): WorkflowStage[] {
     name,
     goal,
     touchpoints: touchpoints.map(([channel, action, timing]) => ({ id: newId(), channel, action, timing })),
+    // Seeded stages start as drafts: the member finalizes each one to complete the planner.
+    status: 'draft',
   });
 
   return [
@@ -174,6 +186,8 @@ export function normalizeWorkflowState(raw: Json | null): WorkflowPlannerState {
             timing: toString(tp.timing),
           };
         }),
+        // Older saved blobs predate the finalize concept; treat an unknown status as a draft.
+        status: toDraftStatus(stage.status),
       };
     }),
   };
@@ -186,7 +200,7 @@ function toMessageCategory(value: unknown): MessageCategory {
 }
 
 export function createSavedMessage(category: MessageCategory = 'inquiry'): SavedMessage {
-  return { id: newId(), label: '', category, body: '' };
+  return { id: newId(), label: '', category, body: '', status: 'draft' };
 }
 
 export function normalizeMessageLibraryState(raw: Json | null): MessageLibraryState {
@@ -201,6 +215,7 @@ export function normalizeMessageLibraryState(raw: Json | null): MessageLibrarySt
         label: toString(message.label),
         category: toMessageCategory(message.category),
         body: toString(message.body),
+        status: toDraftStatus(message.status),
       };
     }),
   };

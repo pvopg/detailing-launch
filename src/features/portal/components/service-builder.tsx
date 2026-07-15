@@ -6,6 +6,7 @@ import { IoAddOutline, IoCloseOutline, IoPricetagOutline, IoTimeOutline, IoTrash
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import type { Json } from '@/libs/supabase/types';
+import { cn } from '@/utils/cn';
 
 import { useModuleState } from '../hooks/use-module-state';
 import { getPortalModule } from '../portal-navigation';
@@ -13,6 +14,7 @@ import { createServicePackage, normalizeServiceBuilderState } from '../tools/nor
 import { formatCurrency, formatDuration } from '../tools/pricing';
 import type { ServiceBuilderState, ServicePackage } from '../tools/types';
 
+import { FinalizeControls, FinalizeSummary } from './finalize-controls';
 import { Field, NumberInput, TextInput } from './tool-fields';
 import { ToolShell } from './tool-shell';
 
@@ -49,6 +51,12 @@ export function ServiceBuilder({ moduleKey, initialState }: { moduleKey: string;
         <EmptyState onCreate={addPackage} />
       ) : (
         <div className='flex flex-col gap-6'>
+          <FinalizeSummary
+            finalized={state.packages.filter((pkg) => pkg.status === 'active').length}
+            total={state.packages.length}
+            noun='packages'
+            hint='Finalize a package once its name and price are set — this tool is complete when every package is finalized.'
+          />
           <div className='grid gap-6 lg:grid-cols-2'>
             {state.packages.map((pkg) => (
               <PackageCard
@@ -94,8 +102,15 @@ function PackageCard({
   onChange: (patch: Partial<ServicePackage>) => void;
   onRemove: () => void;
 }) {
+  const active = pkg.status === 'active';
+  const canFinalize = pkg.name.trim() !== '' && pkg.price > 0;
   return (
-    <div className='flex flex-col gap-5 rounded-lg border border-border bg-card p-6 shadow-sm'>
+    <div
+      className={cn(
+        'flex flex-col gap-5 rounded-lg border bg-card p-6 shadow-sm transition-colors',
+        active ? 'border-feature-green-ink/40' : 'border-border'
+      )}
+    >
       <div className='flex flex-col gap-4'>
         <div className='flex items-start justify-between gap-3'>
           <Field label='Package name' htmlFor={`name-${pkg.id}`} className='flex-1'>
@@ -172,6 +187,14 @@ function PackageCard({
           <span className='rounded-pill bg-muted px-2.5 py-0.5 text-xs font-medium text-foreground'>{pkg.category}</span>
         )}
       </div>
+
+      <FinalizeControls
+        active={active}
+        noun='package'
+        canFinalize={canFinalize}
+        finalizeHint='Add a name and a price above first.'
+        onToggle={() => onChange({ status: active ? 'draft' : 'active' })}
+      />
     </div>
   );
 }

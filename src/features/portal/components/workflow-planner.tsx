@@ -4,12 +4,14 @@ import { IoAddOutline, IoArrowDownOutline, IoTrashOutline } from 'react-icons/io
 
 import { Button } from '@/components/ui/button';
 import type { Json } from '@/libs/supabase/types';
+import { cn } from '@/utils/cn';
 
 import { useModuleState } from '../hooks/use-module-state';
 import { getPortalModule } from '../portal-navigation';
 import { createWorkflowStage, createWorkflowTouchpoint, normalizeWorkflowState } from '../tools/normalize';
 import type { WorkflowPlannerState, WorkflowStage, WorkflowTouchpoint } from '../tools/types';
 
+import { FinalizeControls, FinalizeSummary } from './finalize-controls';
 import { Field, TextInput } from './tool-fields';
 import { ToolShell } from './tool-shell';
 
@@ -50,6 +52,12 @@ export function WorkflowPlanner({ moduleKey, initialState }: { moduleKey: string
         <EmptyState onCreate={addStage} />
       ) : (
         <div className='flex flex-col gap-4'>
+          <FinalizeSummary
+            finalized={state.stages.filter((stage) => stage.status === 'active').length}
+            total={state.stages.length}
+            noun='stages'
+            hint='Finalize a stage once its touch points are set — the planner is complete when every stage is finalized.'
+          />
           {state.stages.map((stage, index) => (
             <div key={stage.id} className='flex flex-col gap-4'>
               <StageCard
@@ -105,8 +113,14 @@ function StageCard({
   onRemove: () => void;
   onTouchpointsChange: (touchpoints: WorkflowTouchpoint[]) => void;
 }) {
+  const active = stage.status === 'active';
   return (
-    <div className='flex flex-col gap-5 rounded-lg border border-border bg-card p-6 shadow-sm'>
+    <div
+      className={cn(
+        'flex flex-col gap-5 rounded-lg border bg-card p-6 shadow-sm transition-colors',
+        active ? 'border-feature-green-ink/40' : 'border-border'
+      )}
+    >
       <div className='flex items-start justify-between gap-3'>
         <div className='flex flex-1 items-start gap-3'>
           <span className='mt-1 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-brand-50 text-sm font-semibold text-brand-600'>
@@ -142,6 +156,12 @@ function StageCard({
       </div>
 
       <TouchpointsEditor stageId={stage.id} touchpoints={stage.touchpoints} onChange={onTouchpointsChange} />
+
+      <FinalizeControls
+        active={active}
+        noun='stage'
+        onToggle={() => onChange({ status: active ? 'draft' : 'active' })}
+      />
     </div>
   );
 }
