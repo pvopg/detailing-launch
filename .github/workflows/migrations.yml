@@ -30,6 +30,11 @@ jobs:
       cancel-in-progress: false
     env:
       SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+      # config.toml interpolates env(RESEND_API_KEY) for SMTP, and the CLI evaluates every env() in
+      # it on any command run inside a project directory — including `migration list`, which never
+      # sends mail. Only `supabase config push` would apply this value, and this job doesn't run it,
+      # so a placeholder satisfies the parser without putting a live Resend key in CI.
+      RESEND_API_KEY: unused-by-db-push
     steps:
       - uses: actions/checkout@v4
 
