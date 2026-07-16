@@ -6,6 +6,8 @@ import {
   revokeEntitlementFromRefund,
 } from '@/features/account/controllers/revoke-entitlement';
 import { upsertUserSubscription } from '@/features/account/controllers/upsert-user-subscription';
+import { deletePrice } from '@/features/pricing/controllers/delete-price';
+import { deleteProduct } from '@/features/pricing/controllers/delete-product';
 import { upsertPrice } from '@/features/pricing/controllers/upsert-price';
 import { upsertProduct } from '@/features/pricing/controllers/upsert-product';
 import { stripeAdmin } from '@/libs/stripe/stripe-admin';
@@ -14,8 +16,10 @@ import { getEnvVar } from '@/utils/get-env-var';
 const relevantEvents = new Set([
   'product.created',
   'product.updated',
+  'product.deleted',
   'price.created',
   'price.updated',
+  'price.deleted',
   'checkout.session.completed',
   'charge.refunded',
   'charge.dispute.created',
@@ -47,9 +51,15 @@ export async function POST(req: Request) {
         case 'product.updated':
           await upsertProduct(event.data.object as Stripe.Product);
           break;
+        case 'product.deleted':
+          await deleteProduct(event.data.object as Stripe.Product);
+          break;
         case 'price.created':
         case 'price.updated':
           await upsertPrice(event.data.object as Stripe.Price);
+          break;
+        case 'price.deleted':
+          await deletePrice(event.data.object as Stripe.Price);
           break;
         case 'customer.subscription.created':
         case 'customer.subscription.updated':
