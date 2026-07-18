@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" font-family="Manrope, system-ui, sans-serif">
+  
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="#ffffff" stroke="#dce1ea" stroke-width="1.5"></rect>
+  <text x="32" y="41" text-anchor="middle" font-family="Manrope" font-weight="800" font-size="27" letter-spacing="-1.4" fill="#101a33">db<tspan fill="#2563eb">.</tspan></text>
+</svg>

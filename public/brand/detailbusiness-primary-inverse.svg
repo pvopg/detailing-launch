@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 180" width="560" height="180" font-family="Manrope, system-ui, sans-serif">
+  
+  <rect x="0" y="0" width="560" height="180" rx="20" fill="#101a33"></rect>
+  <text x="36" y="96" font-family="Manrope" font-weight="800" font-size="46" letter-spacing="-1.6" fill="#ffffff">detailbusiness<tspan fill="#5b8bff">.</tspan>com</text>
+  <circle cx="41" cy="134" r="5" fill="#22c55e"></circle>
+  <text x="56" y="139" font-family="&#39;Geist Mono&#39;, monospace" font-weight="500" font-size="12.5" letter-spacing="1.7" fill="#7d879e">YOU DETAIL. WE BUILD THE SYSTEM.</text>
+</svg>

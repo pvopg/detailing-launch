@@ -2,8 +2,8 @@ import { PropsWithChildren } from 'react';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono, Manrope } from 'next/font/google';
 
-import { Logo } from '@/components/logo';
 import { SiteFooter } from '@/components/site-footer';
+import { SiteHeader } from '@/components/site-header';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/utils/cn';
 import { Analytics } from '@vercel/analytics/react';
@@ -45,12 +45,12 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang='en' suppressHydrationWarning>
       <body
         suppressHydrationWarning
-        className={cn('font-sans antialiased', geist.variable, manrope.variable, geistMono.variable)}
+        className={cn('flex min-h-full flex-col font-sans antialiased', geist.variable, manrope.variable, geistMono.variable)}
       >
         {/* Enables scroll-reveal only when JS is live, before first paint — so no-JS renders visible. */}
         <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.add('reveal-enabled')" }} />
-        <div className='m-auto flex h-full max-w-[1440px] flex-col px-4'>
-          <AppBar />
+        <SiteHeader nav={<Navigation />} />
+        <div className='m-auto flex w-full max-w-[1440px] flex-1 flex-col px-4'>
           <main className='relative flex-1'>
             <div className='relative h-full'>{children}</div>
           </main>
@@ -60,14 +60,5 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Analytics />
       </body>
     </html>
-  );
-}
-
-async function AppBar() {
-  return (
-    <header className='flex items-center justify-between py-8'>
-      <Logo />
-      <Navigation />
-    </header>
   );
 }

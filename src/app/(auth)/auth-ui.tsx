@@ -66,7 +66,13 @@ export function AuthUI({
   return (
     <section className='mt-16 flex w-full flex-col gap-12 rounded-lg border border-border bg-card p-10 px-4 text-center shadow-sm'>
       <div className='flex flex-col gap-4'>
-        <Image src='/logo.png' width={80} height={80} alt='' className='m-auto' />
+        <Image
+          src='/brand/detailbusiness-symbol.png'
+          width={792}
+          height={528}
+          alt='DetailBusiness.com'
+          className='m-auto h-16 w-auto'
+        />
         <h1 className='text-lg'>{titleMap[mode]}</h1>
       </div>
       <div className='flex flex-col gap-4'>

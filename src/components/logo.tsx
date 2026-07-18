@@ -3,16 +3,26 @@ import Link from 'next/link';
 
 export function Logo() {
   return (
-    <Link href='/' className='flex w-fit items-center gap-2'>
+    <Link href='/' className='flex w-fit items-center gap-2.5'>
+      {/* `db.` symbol mark — decorative; the wordmark carries the accessible name. */}
       <Image
-        src='/logo.png'
-        width={40}
-        height={40}
+        src='/brand/detailbusiness-symbol.png'
+        width={792}
+        height={528}
         priority
         quality={100}
-        alt='DetailBusiness.com logo mark'
+        className='h-8 w-auto'
+        alt=''
       />
-      <span className='font-display text-xl font-semibold tracking-tight text-foreground'>DetailBusiness.com</span>
+      <Image
+        src='/brand/detailbusiness-wordmark-inverse.png'
+        width={1488}
+        height={366}
+        priority
+        quality={100}
+        className='h-8 w-auto'
+        alt='DetailBusiness.com'
+      />
     </Link>
   );
 }
