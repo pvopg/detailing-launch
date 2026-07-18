@@ -1,3 +1,4 @@
+import { RefundDisclosure } from '@/components/refund-disclosure';
 import { PricingCard } from '@/features/pricing/components/price-card';
 import { getProducts } from '@/features/pricing/controllers/get-products';
 
@@ -21,6 +22,7 @@ export async function PricingSection({ isPricingPage }: { isPricingPage?: boolea
             return <PricingCard key={product.id} product={product} createCheckoutAction={createCheckoutAction} />;
           })}
         </div>
+        <RefundDisclosure className='text-center' />
       </div>
     </section>
   );

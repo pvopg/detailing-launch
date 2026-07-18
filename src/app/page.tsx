@@ -28,7 +28,7 @@ export const metadata: Metadata = {
   alternates: { canonical },
   openGraph: {
     type: 'website',
-    siteName: 'pgGallery',
+    siteName: 'DetailBusiness.com',
     title: seo.title,
     description: seo.description,
     url: canonical,

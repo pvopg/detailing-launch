@@ -20,6 +20,7 @@
     "migration:new": "supabase migration new",
     "migration:up": "supabase migration up --local",
     "migration:squash": "supabase migration squash --local",
+    "db:push:dev": "supabase db push --linked",
     "db:push:prod": "env-cmd -f ./.env.prod supabase db push --db-url $SUPABASE_DB_URL",
     "db:diff:prod": "env-cmd -f ./.env.prod supabase db diff --db-url $SUPABASE_DB_URL --schema public"
   },

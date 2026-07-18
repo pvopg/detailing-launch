@@ -1,5 +1,6 @@
 import { IoCheckmark, IoClose } from 'react-icons/io5';
 
+import { RefundDisclosure } from '@/components/refund-disclosure';
 import { getEntitlements } from '@/features/account/controllers/get-entitlements';
 import { getSession } from '@/features/account/controllers/get-session';
 import { createCheckoutAction } from '@/features/pricing/actions/create-checkout-action';
@@ -75,6 +76,7 @@ export async function MarketingPricingSection() {
           </div>
 
           <p className='max-w-2xl text-center text-sm text-muted-foreground'>{pricing.thirdPartyDisclosure}</p>
+          <RefundDisclosure />
 
           <TrackInView event='tier_comparison_view'>
             <Reveal className='flex w-full justify-center'>

@@ -33,7 +33,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Mobile Detailing Member Portal — pgGallery',
+  title: 'Mobile Detailing Member Portal — DetailBusiness.com',
   description:
     'Digital systems for mobile detailers: capture leads, take booking and quote requests, collect deposits, follow up, and grow a more professional detailing business.',
 };

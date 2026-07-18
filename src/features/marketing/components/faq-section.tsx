@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { IoChevronDown } from 'react-icons/io5';
 
 import { Container } from '@/components/container';
@@ -8,7 +9,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { cn } from '@/utils/cn';
 
 import { track } from '../analytics';
-import { type FaqItem, landingContent, resolveFaqAnswer } from '../content';
+import { type FaqItem, landingContent, refundPolicy, resolveFaqAnswer } from '../content';
 
 /**
  * FAQ — an accessible accordion over Radix Collapsible. Answers mirror the visible page claims. The
@@ -50,7 +51,16 @@ function FaqRow({ item }: { item: FaqItem }) {
         />
       </CollapsibleTrigger>
       <CollapsibleContent className='overflow-hidden data-[state=closed]:animate-collapsible-up data-[state=open]:animate-collapsible-down'>
-        <p className='px-5 pb-5 text-sm text-muted-foreground'>{answer}</p>
+        <div className='flex flex-col gap-2 px-5 pb-5 text-sm text-muted-foreground'>
+          <p>{answer}</p>
+          {item.isRefundPolicy && landingContent.refundPolicyApproved && (
+            <p>
+              <Link href={refundPolicy.route} className='font-medium text-brand hover:underline'>
+                Read the full Refund Policy
+              </Link>
+            </p>
+          )}
+        </div>
       </CollapsibleContent>
     </Collapsible>
   );

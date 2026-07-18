@@ -10,9 +10,9 @@ export function Logo() {
         height={40}
         priority
         quality={100}
-        alt='pgGallery logo mark'
+        alt='DetailBusiness.com logo mark'
       />
-      <span className='font-display text-xl font-semibold tracking-tight text-foreground'>pgGallery</span>
+      <span className='font-display text-xl font-semibold tracking-tight text-foreground'>DetailBusiness.com</span>
     </Link>
   );
 }

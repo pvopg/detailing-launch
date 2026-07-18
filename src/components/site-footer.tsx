@@ -64,7 +64,7 @@ export function SiteFooter() {
       </div>
       <p className='max-w-3xl text-xs text-muted-foreground'>{footer.thirdPartyDisclosure}</p>
       <div className='border-t border-border py-6 text-center'>
-        <span className='text-xs text-muted-foreground'>Copyright {new Date().getFullYear()} © pgGallery</span>
+        <span className='text-xs text-muted-foreground'>Copyright {new Date().getFullYear()} © DetailBusiness.com</span>
       </div>
     </footer>
   );

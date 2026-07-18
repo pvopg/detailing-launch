@@ -48,17 +48,15 @@ export async function grantEntitlementFromCheckout(checkoutSession: Stripe.Check
     tier: metadata.data.tier,
     price_id: priceId,
     stripe_checkout_session_id: checkoutSession.id,
-    // Sent explicitly so buying again after a refund clears the tombstone. The upsert below only
-    // updates columns present in the payload, so omitting these would leave a repurchaser revoked.
-    revoked_at: null,
-    revoked_reason: null,
   };
 
-  // Idempotent on (user_id, tier): webhook replays and repeat purchases of the same tier both
-  // resolve to the existing row rather than throwing on the unique constraint.
+  // Each checkout session owns its own row (see the per-purchase migration), so a repeat purchase of
+  // the same tier inserts a new, live entitlement — that's what restores access after a refund. The
+  // conflict target is the session id and duplicates are ignored, so a webhook replay of an already
+  // granted (or since-refunded) session is a no-op rather than silently un-revoking a tombstone.
   const { error } = await supabaseAdminClient
     .from('entitlements')
-    .upsert([entitlement], { onConflict: 'user_id,tier' });
+    .upsert([entitlement], { onConflict: 'stripe_checkout_session_id', ignoreDuplicates: true });
   if (error) throw error;
 
   console.info(`Granted [${metadata.data.tier}] entitlement to user [${userId}] from session [${checkoutSession.id}]`);

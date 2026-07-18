@@ -30,7 +30,7 @@ export default function OpengraphImage() {
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 16, fontSize: 32, fontWeight: 600 }}>
-          pgGallery
+          DetailBusiness.com
         </div>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
           <div style={{ fontSize: 40, color: '#dbeaff' }}>{hero.eyebrow}</div>

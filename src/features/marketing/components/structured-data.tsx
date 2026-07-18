@@ -19,7 +19,7 @@ export function StructuredData() {
     '@type': 'Product',
     name: 'Mobile Detailing Member Portal',
     description: seo.description,
-    brand: { '@type': 'Brand', name: 'pgGallery' },
+    brand: { '@type': 'Brand', name: 'DetailBusiness.com' },
     url,
     offers: [pricing.foundationOffer, pricing.businessSystemsOffer].map((offer) => ({
       '@type': 'Offer',

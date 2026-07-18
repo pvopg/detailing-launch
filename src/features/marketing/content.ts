@@ -212,7 +212,7 @@ const BUSINESS_INCLUDES = [
 
 export const landingContent: LandingPageContent = {
   seo: {
-    title: 'Mobile Detailing Business Systems | pgGallery',
+    title: 'Mobile Detailing Business Systems | DetailBusiness.com',
     description:
       'Build the digital foundation around your mobile detailing work with guided setup, saved progress, pricing, workflow, messaging, and software tools.',
     path: '/',
@@ -521,14 +521,37 @@ export const landingContent: LandingPageContent = {
       // corresponding page is implemented and (for refund) approved.
       { label: 'Privacy Policy', href: '/privacy', available: false },
       { label: 'Terms', href: '/terms', available: false },
-      { label: 'Refund Policy', href: '/refund-policy', available: false },
+      { label: 'Refund Policy', href: '/refund-policy', available: true },
     ],
     thirdPartyDisclosure:
       'Recommended third-party software is billed separately by those providers and is not included in portal access.',
   },
-  refundPolicyApproved: false,
-  refundPolicyFaq: undefined,
+  refundPolicyApproved: true,
+  refundPolicyFaq:
+    'Yes. You may request a refund within 72 hours of purchase if the kit is not a good fit. ' +
+    'Exploring the portal or beginning a guide does not automatically make you ineligible, but we ' +
+    'may decline a request if more than two Foundation guides or any Business Systems tool has ' +
+    'already been completed, or if the paid materials have otherwise been substantially used. Full ' +
+    'refunds end the access granted by the refunded purchase. See our Refund Policy for complete terms.',
 };
+
+/**
+ * Refund policy constants shared by the policy page, the checkout disclosure, and the FAQ so the
+ * 72-hour promise and access-after-refund rules read identically everywhere — the handoff requires a
+ * single consistent refund promise across legal, checkout, and FAQ surfaces.
+ */
+export const refundPolicy = {
+  route: '/refund-policy',
+  effectiveDate: 'July 16, 2026',
+  // Legal entity stays as the registered LLC; only the customer-facing brand is DetailBusiness.com.
+  legalName: 'pgGallery LLC',
+  tradeName: 'DetailBusiness.com',
+  // Rendered beside every purchase CTA (see PricingCard). Keep in lockstep with the policy summary.
+  checkoutDisclosure:
+    'This purchase provides immediate access to digital content. Refund requests must be submitted ' +
+    'within 72 hours under our Three-Day Fit Guarantee. Substantial completion or use may make a ' +
+    'purchase ineligible. Full refunds end the access granted by the refunded purchase.',
+} as const;
 
 /**
  * Resolves the visible answer for a FAQ item. The refund item is launch-safe: it returns approved
